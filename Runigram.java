@@ -160,11 +160,11 @@ public class Runigram {
      * values in the two input color.
      */
     public static Color blend(Color c1, Color c2, double alpha) {
-        double blendRed = alpha * c1.getRed() + (1 - alpha) * c2.getRed();
-        double blendGreen = alpha * c1.getGreen() + (1 - alpha) * c2.getGreen();
-        double blendBlue = alpha * c1.getBlue() + (1 - alpha) * c2.getBlue();
-        Color blendedColor = new Color((int) blendRed,(int) blendGreen, (int)blendBlue);
-        return blendedColor;
+        int r = (int) (c1.getRed() * alpha + c2.getRed() * (1 - alpha));
+        int g = (int) (c1.getGreen() * alpha + c2.getGreen() * (1 - alpha));
+        int b = (int) (c1.getBlue() * alpha + c2.getBlue() * (1 - alpha));
+        Color newcolor = new Color(r, g, b);
+        return newcolor;
     }
 
     /**
@@ -174,17 +174,13 @@ public class Runigram {
      * The two images must have the same dimensions.
      */
     public static Color[][] blend(Color[][] image1, Color[][] image2, double alpha) {
-        int numRows = image1.length;
-        int numCols = image1[0].length;
-        Color[][] blendedImage = new Color[numRows][numCols];
-        for (int row = 0; row < numRows; row++) {
-            for (int col = 0; col < numCols; col++) {
-                Color pixel1 = image1[row][col];
-                Color pixel2 = image2[row][col];
-                blendedImage[row][col] = blend(pixel1, pixel2, alpha);
+        Color[][] newimage = new Color[image1.length][image1[0].length];
+        for (int i = 0; i < newimage.length; i++) {
+            for (int j = 0; j < newimage[0].length; j++) {
+                newimage[i][j] = blend(image1[i][j], image2[i][j], alpha);
             }
         }
-        return blendedImage;
+        return newimage;
     }
 
     /**
@@ -194,16 +190,17 @@ public class Runigram {
      * of the source image.
      */
     public static void morph(Color[][] source, Color[][] target, int n) {
-        int sourceRows = source.length;
-        int sourceCols = source[0].length;
-        Color[][] blendedImage = scaled(target, sourceCols, sourceRows);
-        for(int i = 0; i < n + 1; i++) {
-            double alphaStep = (double) (n - i) / n;
-            Color[][] morphed = blend(source, blendedImage, alphaStep);
-            Runigram.display(morphed);
+        if (source.length != target.length || source[0].length != target[0].length) {
+            target = scaled(target, source[0].length, source.length);
+        }
+        for (int i = 0; i <= n; i++) {
+            double alpha = (double) (n - i) / n;
+            display(blend(source, target, alpha));
             StdDraw.pause(500);
         }
+
     }
+
     /**
      * Creates a canvas for the given image.
      */
