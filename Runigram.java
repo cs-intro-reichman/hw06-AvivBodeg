@@ -163,8 +163,7 @@ public class Runigram {
         int r = (int) (c1.getRed() * alpha + c2.getRed() * (1 - alpha));
         int g = (int) (c1.getGreen() * alpha + c2.getGreen() * (1 - alpha));
         int b = (int) (c1.getBlue() * alpha + c2.getBlue() * (1 - alpha));
-        Color newcolor = new Color(r, g, b);
-        return newcolor;
+        return new Color(r, g, b);
     }
 
     /**
@@ -174,13 +173,13 @@ public class Runigram {
      * The two images must have the same dimensions.
      */
     public static Color[][] blend(Color[][] image1, Color[][] image2, double alpha) {
-        Color[][] newimage = new Color[image1.length][image1[0].length];
-        for (int i = 0; i < newimage.length; i++) {
-            for (int j = 0; j < newimage[0].length; j++) {
-                newimage[i][j] = blend(image1[i][j], image2[i][j], alpha);
+        Color[][] blendedImage = new Color[image1.length][image1[0].length];
+        for (int i = 0; i < blendedImage.length; i++) {
+            for (int j = 0; j < blendedImage[0].length; j++) {
+                blendedImage[i][j] = blend(image1[i][j], image2[i][j], alpha);
             }
         }
-        return newimage;
+        return blendedImage;
     }
 
     /**
